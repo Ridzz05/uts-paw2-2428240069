@@ -1,8 +1,8 @@
 {
   "info": {
     "_postman_id": "a3f1c2d4-2428-4006-9069-000000000003",
-    "name": "Tugas 3 - API Lukisan MongoDB",
-    "description": "Koleksi pengujian API Galeri Seni - Lukisan di atas MongoDB (embedding, referencing, filter, sorting, pagination, projection). M. Rizki Algipari / 2428240069.",
+    "name": "Tugas 3 - API Bioskop MongoDB",
+    "description": "Koleksi pengujian API Galeri Seni - Bioskop di atas MongoDB (embedding, referencing, filter, sorting, pagination, projection). M. Rizki Algipari / 2428240069.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -21,9 +21,9 @@
                   "  const b = pm.response.json();",
                   "  pm.expect(b.nama).to.eql(\"M. Rizki Algipari\");",
                   "  pm.expect(b.nim).to.eql(\"2428240069\");",
-                  "  pm.expect(b.resource).to.eql(\"/paintings\");",
+                  "  pm.expect(b.resource).to.eql(\"/Bioskop\");",
                   "  pm.expect(b.endpoints).to.be.an(\"array\");",
-                  "  pm.expect(b.endpoints.join(\" \")).to.include(\"/artists\");",
+                  "  pm.expect(b.endpoints.join(\" \")).to.include(\"/film\");",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -38,7 +38,7 @@
           "response": []
         },
         {
-          "name": "Ambil semua lukisan",
+          "name": "Ambil semua Bioskop",
           "event": [
             {
               "listen": "test",
@@ -55,12 +55,12 @@
                   "  pm.expect(b.pagination.totalPages).to.eql(1);",
                   "  pm.expect(b.pagination.hasNext).to.eql(false);",
                   "});",
-                  "pm.test(\"Pelukis ter-populate (referencing) dan kritik tertanam (embedding)\", () => {",
+                  "pm.test(\"Film ter-populate (referencing) dan komedi tertanam (embedding)\", () => {",
                   "  const b = pm.response.json();",
-                  "  pm.expect(b.data[0].pelukis).to.be.an(\"object\");",
-                  "  pm.expect(b.data[0].pelukis.nama).to.be.a(\"string\");",
-                  "  pm.expect(b.data[0].kritik).to.be.an(\"array\");",
-                  "  pm.expect(b.data[0].ukuran.media).to.eql(\"Kanvas\");",
+                  "  pm.expect(b.data[0].film).to.be.an(\"object\");",
+                  "  pm.expect(b.data[0].film.nama).to.be.a(\"string\");",
+                  "  pm.expect(b.data[0].komedi).to.be.an(\"array\");",
+                  "  pm.expect(b.data[0].drama.media).to.eql(\"Kanvas\");",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -70,7 +70,7 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{base_url}}/paintings", "host": ["{{base_url}}"], "path": ["paintings"] }
+            "url": { "raw": "{{base_url}}/Bioskop", "host": ["{{base_url}}"], "path": ["Bioskop"] }
           },
           "response": []
         }
@@ -80,17 +80,17 @@
       "name": "Filter, Sort, Pagination, Projection",
       "item": [
         {
-          "name": "Filter berdasarkan aliran",
+          "name": "Filter berdasarkan genre",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Hanya aliran realisme yang dikembalikan\", () => {",
+                  "pm.test(\"Hanya genre sutradara yang dikembalikan\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.pagination.total).to.eql(2);",
-                  "  b.data.forEach((lukisan) => pm.expect(lukisan.aliran).to.eql(\"realisme\"));",
+                  "  b.data.forEach((Bioskop) => pm.expect(Bioskop.genre).to.eql(\"sutradara\"));",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -101,28 +101,28 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/paintings?aliran=realisme",
+              "raw": "{{base_url}}/Bioskop?genre=sutradara",
               "host": ["{{base_url}}"],
-              "path": ["paintings"],
-              "query": [{ "key": "aliran", "value": "realisme" }]
+              "path": ["Bioskop"],
+              "query": [{ "key": "genre", "value": "sutradara" }]
             }
           },
           "response": []
         },
         {
-          "name": "Filter rentang harga",
+          "name": "Filter rentang durasiMenit",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Harga seluruh hasil berada di rentang 5.000.000 sampai 9.000.000\", () => {",
+                  "pm.test(\"DurasiMenit seluruh hasil berada di rentang 5.000.000 sampai 9.000.000\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.pagination.total).to.eql(3);",
-                  "  b.data.forEach((lukisan) => {",
-                  "    pm.expect(lukisan.harga).to.be.at.least(5000000);",
-                  "    pm.expect(lukisan.harga).to.be.at.most(9000000);",
+                  "  b.data.forEach((Bioskop) => {",
+                  "    pm.expect(Bioskop.durasiMenit).to.be.at.least(5000000);",
+                  "    pm.expect(Bioskop.durasiMenit).to.be.at.most(9000000);",
                   "  });",
                   "});"
                 ],
@@ -134,19 +134,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/paintings?hargaMin=5000000&hargaMax=9000000",
+              "raw": "{{base_url}}/Bioskop?durasiMenitMin=5000000&durasiMenitMax=9000000",
               "host": ["{{base_url}}"],
-              "path": ["paintings"],
+              "path": ["Bioskop"],
               "query": [
-                { "key": "hargaMin", "value": "5000000" },
-                { "key": "hargaMax", "value": "9000000" }
+                { "key": "durasiMenitMin", "value": "5000000" },
+                { "key": "durasiMenitMax", "value": "9000000" }
               ]
             }
           },
           "response": []
         },
         {
-          "name": "Filter berdasarkan nama pelukis",
+          "name": "Filter berdasarkan nama film",
           "event": [
             {
               "listen": "test",
@@ -156,7 +156,7 @@
                   "pm.test(\"Hasil hanya milik Rahmat Hidayat\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.pagination.total).to.eql(2);",
-                  "  b.data.forEach((lukisan) => pm.expect(lukisan.pelukis.nama).to.eql(\"Rahmat Hidayat\"));",
+                  "  b.data.forEach((Bioskop) => pm.expect(Bioskop.film.nama).to.eql(\"Rahmat Hidayat\"));",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -167,28 +167,28 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/paintings?pelukis=Rahmat%20Hidayat",
+              "raw": "{{base_url}}/Bioskop?film=Rahmat%20Hidayat",
               "host": ["{{base_url}}"],
-              "path": ["paintings"],
-              "query": [{ "key": "pelukis", "value": "Rahmat Hidayat" }]
+              "path": ["Bioskop"],
+              "query": [{ "key": "film", "value": "Rahmat Hidayat" }]
             }
           },
           "response": []
         },
         {
-          "name": "Sorting harga menurun",
+          "name": "Sorting durasiMenit menurun",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Harga terurut menurun\", () => {",
+                  "pm.test(\"DurasiMenit terurut menurun\", () => {",
                   "  const b = pm.response.json();",
-                  "  pm.expect(b.data[0].harga).to.eql(12500000);",
-                  "  pm.expect(b.data[1].harga).to.eql(9800000);",
-                  "  const harga = b.data.map((lukisan) => lukisan.harga);",
-                  "  pm.expect(harga).to.eql([...harga].sort((a, c) => c - a));",
+                  "  pm.expect(b.data[0].durasiMenit).to.eql(12500000);",
+                  "  pm.expect(b.data[1].durasiMenit).to.eql(9800000);",
+                  "  const durasiMenit = b.data.map((Bioskop) => Bioskop.durasiMenit);",
+                  "  pm.expect(durasiMenit).to.eql([...durasiMenit].sort((a, c) => c - a));",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -199,10 +199,10 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/paintings?sort=-harga",
+              "raw": "{{base_url}}/Bioskop?sort=-durasiMenit",
               "host": ["{{base_url}}"],
-              "path": ["paintings"],
-              "query": [{ "key": "sort", "value": "-harga" }]
+              "path": ["Bioskop"],
+              "query": [{ "key": "sort", "value": "-durasiMenit" }]
             }
           },
           "response": []
@@ -229,9 +229,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/paintings?page=2&limit=2",
+              "raw": "{{base_url}}/Bioskop?page=2&limit=2",
               "host": ["{{base_url}}"],
-              "path": ["paintings"],
+              "path": ["Bioskop"],
               "query": [
                 { "key": "page", "value": "2" },
                 { "key": "limit", "value": "2" }
@@ -248,11 +248,11 @@
               "script": {
                 "exec": [
                   "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Hanya _id, judul, dan harga yang dikembalikan\", () => {",
+                  "pm.test(\"Hanya _id, judul, dan durasiMenit yang dikembalikan\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.data).to.be.an(\"array\").that.is.not.empty;",
-                  "  const diharapkan = [\"_id\", \"judul\", \"harga\"].sort();",
-                  "  b.data.forEach((lukisan) => pm.expect(Object.keys(lukisan).sort()).to.eql(diharapkan));",
+                  "  const diharapkan = [\"_id\", \"judul\", \"durasiMenit\"].sort();",
+                  "  b.data.forEach((Bioskop) => pm.expect(Object.keys(Bioskop).sort()).to.eql(diharapkan));",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -263,10 +263,10 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/paintings?fields=judul,harga",
+              "raw": "{{base_url}}/Bioskop?fields=judul,durasiMenit",
               "host": ["{{base_url}}"],
-              "path": ["paintings"],
-              "query": [{ "key": "fields", "value": "judul,harga" }]
+              "path": ["Bioskop"],
+              "query": [{ "key": "fields", "value": "judul,durasiMenit" }]
             }
           },
           "response": []
@@ -282,7 +282,7 @@
                   "pm.test(\"Pesan menyebut field sort yang tidak dikenal\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.status).to.eql(\"error\");",
-                  "  pm.expect(b.message).to.include(\"Field sort tidak dikenal: harga_salah\");",
+                  "  pm.expect(b.message).to.include(\"Field sort tidak dikenal: durasiMenit_salah\");",
                   "  pm.expect(b.data).to.eql(null);",
                   "});"
                 ],
@@ -294,10 +294,10 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/paintings?sort=harga_salah",
+              "raw": "{{base_url}}/Bioskop?sort=durasiMenit_salah",
               "host": ["{{base_url}}"],
-              "path": ["paintings"],
-              "query": [{ "key": "sort", "value": "harga_salah" }]
+              "path": ["Bioskop"],
+              "query": [{ "key": "sort", "value": "durasiMenit_salah" }]
             }
           },
           "response": []
@@ -308,28 +308,28 @@
       "name": "CRUD dan Relasi",
       "item": [
         {
-          "name": "Tambah lukisan baru",
+          "name": "Tambah Bioskop baru",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 201 Created\", () => pm.response.to.have.status(201));",
-                  "pm.test(\"Pesan dan pelukis hasil referensi benar\", () => {",
+                  "pm.test(\"Pesan dan film hasil referensi benar\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.message).to.eql(\"Data berhasil ditambahkan\");",
-                  "  pm.expect(b.data.pelukis).to.be.an(\"object\");",
-                  "  pm.expect(b.data.pelukis.nama).to.eql(\"M. Rizki Algipari\");",
+                  "  pm.expect(b.data.film).to.be.an(\"object\");",
+                  "  pm.expect(b.data.film.nama).to.eql(\"M. Rizki Algipari\");",
                   "});",
-                  "pm.test(\"Kritik dan ukuran tersimpan sebagai embedding\", () => {",
+                  "pm.test(\"Komedi dan drama tersimpan sebagai embedding\", () => {",
                   "  const b = pm.response.json();",
-                  "  pm.expect(b.data.kritik).to.be.an(\"array\").that.has.lengthOf(1);",
-                  "  pm.expect(b.data.ukuran.media).to.eql(\"Kanvas\");",
+                  "  pm.expect(b.data.komedi).to.be.an(\"array\").that.has.lengthOf(1);",
+                  "  pm.expect(b.data.drama.media).to.eql(\"Kanvas\");",
                   "});",
-                  "pm.test(\"Simpan paintingId dan artistId\", () => {",
+                  "pm.test(\"Simpan BioskopId dan filmId\", () => {",
                   "  const b = pm.response.json();",
-                  "  pm.environment.set(\"paintingId\", b.data._id);",
-                  "  pm.environment.set(\"artistId\", b.data.pelukis._id);",
+                  "  pm.environment.set(\"BioskopId\", b.data._id);",
+                  "  pm.environment.set(\"filmId\", b.data.film._id);",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -344,30 +344,30 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"kodeLukisan\": \"LKS-UJI-2428240069\",\n  \"judul\": \"Lukisan Bukti Uji 2428240069\",\n  \"pelukis\": \"M. Rizki Algipari\",\n  \"aliran\": \"realisme\",\n  \"tahunDibuat\": 2026,\n  \"harga\": 4500000,\n  \"ukuran\": { \"tinggi\": 60, \"lebar\": 40, \"media\": \"Kanvas\" },\n  \"kritik\": [\n    { \"nama\": \"Panitia Uji\", \"rating\": 5, \"komentar\": \"Lukisan bukti uji 2428240069.\" }\n  ]\n}",
+              "raw": "{\n  \"kodeFilm\": \"FLM-UJI-2428240069\",\n  \"judul\": \"Bioskop Bukti Uji 2428240069\",\n  \"film\": \"M. Rizki Algipari\",\n  \"genre\": \"sutradara\",\n  \"createdAt\": 2026,\n  \"durasiMenit\": 4500000,\n  \"drama\": { \"tinggi\": 60, \"lebar\": 40, \"media\": \"Kanvas\" },\n  \"komedi\": [\n    { \"nama\": \"Panitia Uji\", \"rating\": 5, \"komentar\": \"Bioskop bukti uji 2428240069.\" }\n  ]\n}",
               "options": { "raw": { "language": "json" } }
             },
-            "url": { "raw": "{{base_url}}/paintings", "host": ["{{base_url}}"], "path": ["paintings"] }
+            "url": { "raw": "{{base_url}}/Bioskop", "host": ["{{base_url}}"], "path": ["Bioskop"] }
           },
           "response": []
         },
         {
-          "name": "Ambil lukisan baru berdasarkan ID",
+          "name": "Ambil Bioskop baru berdasarkan ID",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Pelukis ter-populate sesuai artistId\", () => {",
+                  "pm.test(\"Film ter-populate sesuai filmId\", () => {",
                   "  const b = pm.response.json();",
-                  "  pm.expect(b.data.pelukis._id).to.eql(pm.environment.get(\"artistId\"));",
-                  "  pm.expect(b.data.pelukis.nama).to.eql(\"M. Rizki Algipari\");",
+                  "  pm.expect(b.data.film._id).to.eql(pm.environment.get(\"filmId\"));",
+                  "  pm.expect(b.data.film.nama).to.eql(\"M. Rizki Algipari\");",
                   "});",
-                  "pm.test(\"Dokumen memuat kritik dan ukuran tertanam\", () => {",
+                  "pm.test(\"Dokumen memuat komedi dan drama tertanam\", () => {",
                   "  const b = pm.response.json();",
-                  "  pm.expect(b.data.kritik).to.have.lengthOf(1);",
-                  "  pm.expect(b.data.ukuran).to.be.an(\"object\");",
+                  "  pm.expect(b.data.komedi).to.have.lengthOf(1);",
+                  "  pm.expect(b.data.drama).to.be.an(\"object\");",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -378,26 +378,26 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/paintings/{{paintingId}}",
+              "raw": "{{base_url}}/Bioskop/{{BioskopId}}",
               "host": ["{{base_url}}"],
-              "path": ["paintings", "{{paintingId}}"]
+              "path": ["Bioskop", "{{BioskopId}}"]
             }
           },
           "response": []
         },
         {
-          "name": "Perbarui lukisan",
+          "name": "Perbarui Bioskop",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Judul dan harga berubah\", () => {",
+                  "pm.test(\"Judul dan durasiMenit berubah\", () => {",
                   "  const b = pm.response.json();",
-                  "  pm.expect(b.data.judul).to.eql(\"Lukisan Bukti Uji 2428240069 (Diperbarui)\");",
-                  "  pm.expect(b.data.harga).to.eql(5000000);",
-                  "  pm.expect(b.data.pelukis.nama).to.eql(\"M. Rizki Algipari\");",
+                  "  pm.expect(b.data.judul).to.eql(\"Bioskop Bukti Uji 2428240069 (Diperbarui)\");",
+                  "  pm.expect(b.data.durasiMenit).to.eql(5000000);",
+                  "  pm.expect(b.data.film.nama).to.eql(\"M. Rizki Algipari\");",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -412,35 +412,35 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"kodeLukisan\": \"LKS-UJI-2428240069\",\n  \"judul\": \"Lukisan Bukti Uji 2428240069 (Diperbarui)\",\n  \"pelukis\": \"M. Rizki Algipari\",\n  \"aliran\": \"impresionisme\",\n  \"tahunDibuat\": 2026,\n  \"harga\": 5000000,\n  \"ukuran\": { \"tinggi\": 60, \"lebar\": 40, \"media\": \"Kanvas\" },\n  \"kritik\": [\n    { \"nama\": \"Panitia Uji\", \"rating\": 5, \"komentar\": \"Lukisan bukti uji 2428240069.\" }\n  ]\n}",
+              "raw": "{\n  \"kodeFilm\": \"FLM-UJI-2428240069\",\n  \"judul\": \"Bioskop Bukti Uji 2428240069 (Diperbarui)\",\n  \"film\": \"M. Rizki Algipari\",\n  \"genre\": \"impresionisme\",\n  \"createdAt\": 2026,\n  \"durasiMenit\": 5000000,\n  \"drama\": { \"tinggi\": 60, \"lebar\": 40, \"media\": \"Kanvas\" },\n  \"komedi\": [\n    { \"nama\": \"Panitia Uji\", \"rating\": 5, \"komentar\": \"Bioskop bukti uji 2428240069.\" }\n  ]\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
-              "raw": "{{base_url}}/paintings/{{paintingId}}",
+              "raw": "{{base_url}}/Bioskop/{{BioskopId}}",
               "host": ["{{base_url}}"],
-              "path": ["paintings", "{{paintingId}}"]
+              "path": ["Bioskop", "{{BioskopId}}"]
             }
           },
           "response": []
         },
         {
-          "name": "Daftar pelukis dengan jumlah lukisan",
+          "name": "Daftar film dengan jumlah Bioskop",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Setiap pelukis memiliki jumlahLukisan\", () => {",
+                  "pm.test(\"Setiap film memiliki jumlahBioskop\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.data).to.be.an(\"array\").that.is.not.empty;",
-                  "  b.data.forEach((artist) => pm.expect(artist.jumlahLukisan).to.be.a(\"number\"));",
+                  "  b.data.forEach((film) => pm.expect(film.jumlahBioskop).to.be.a(\"number\"));",
                   "});",
-                  "pm.test(\"Pelukis uji terdaftar dengan satu lukisan\", () => {",
+                  "pm.test(\"Film uji terdaftar dengan satu Bioskop\", () => {",
                   "  const b = pm.response.json();",
-                  "  const pelukisUji = b.data.find((artist) => artist.nama === \"M. Rizki Algipari\");",
-                  "  pm.expect(pelukisUji).to.be.an(\"object\");",
-                  "  pm.expect(pelukisUji.jumlahLukisan).to.eql(1);",
+                  "  const filmUji = b.data.find((film) => film.nama === \"M. Rizki Algipari\");",
+                  "  pm.expect(filmUji).to.be.an(\"object\");",
+                  "  pm.expect(filmUji.jumlahBioskop).to.eql(1);",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -450,22 +450,22 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{base_url}}/artists", "host": ["{{base_url}}"], "path": ["artists"] }
+            "url": { "raw": "{{base_url}}/film", "host": ["{{base_url}}"], "path": ["film"] }
           },
           "response": []
         },
         {
-          "name": "Detail pelukis beserta lukisannya",
+          "name": "Detail film beserta Bioskopnya",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Daftar lukisan pelukis berisi satu data\", () => {",
+                  "pm.test(\"Daftar Bioskop film berisi satu data\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.data.nama).to.eql(\"M. Rizki Algipari\");",
-                  "  pm.expect(b.data.lukisan).to.be.an(\"array\").that.has.lengthOf(1);",
+                  "  pm.expect(b.data.Bioskop).to.be.an(\"array\").that.has.lengthOf(1);",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -476,25 +476,25 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/artists/{{artistId}}",
+              "raw": "{{base_url}}/film/{{filmId}}",
               "host": ["{{base_url}}"],
-              "path": ["artists", "{{artistId}}"]
+              "path": ["film", "{{filmId}}"]
             }
           },
           "response": []
         },
         {
-          "name": "Tambah pelukis baru",
+          "name": "Tambah film baru",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 201 Created\", () => pm.response.to.have.status(201));",
-                  "pm.test(\"Data pelukis baru tersimpan\", () => {",
+                  "pm.test(\"Data film baru tersimpan\", () => {",
                   "  const b = pm.response.json();",
-                  "  pm.expect(b.message).to.eql(\"Data pelukis berhasil ditambahkan\");",
-                  "  pm.expect(b.data.nama).to.eql(\"Pelukis Uji 2428240069\");",
+                  "  pm.expect(b.message).to.eql(\"Data film berhasil ditambahkan\");",
+                  "  pm.expect(b.data.nama).to.eql(\"Film Uji 2428240069\");",
                   "  pm.expect(b.data.negara).to.eql(\"Indonesia\");",
                   "});"
                 ],
@@ -510,15 +510,15 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nama\": \"Pelukis Uji 2428240069\",\n  \"negara\": \"Indonesia\",\n  \"tahunLahir\": 1998,\n  \"aliran\": \"realisme\"\n}",
+              "raw": "{\n  \"nama\": \"Film Uji 2428240069\",\n  \"negara\": \"Indonesia\",\n  \"tahunLahir\": 1998,\n  \"genre\": \"sutradara\"\n}",
               "options": { "raw": { "language": "json" } }
             },
-            "url": { "raw": "{{base_url}}/artists", "host": ["{{base_url}}"], "path": ["artists"] }
+            "url": { "raw": "{{base_url}}/film", "host": ["{{base_url}}"], "path": ["film"] }
           },
           "response": []
         },
         {
-          "name": "Hapus lukisan uji",
+          "name": "Hapus Bioskop uji",
           "event": [
             {
               "listen": "test",
@@ -535,9 +535,9 @@
             "method": "DELETE",
             "header": [{ "key": "x-api-key", "value": "{{api_key}}" }],
             "url": {
-              "raw": "{{base_url}}/paintings/{{paintingId}}",
+              "raw": "{{base_url}}/Bioskop/{{BioskopId}}",
               "host": ["{{base_url}}"],
-              "path": ["paintings", "{{paintingId}}"]
+              "path": ["Bioskop", "{{BioskopId}}"]
             }
           },
           "response": []
@@ -569,10 +569,10 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"kodeLukisan\": \"LKS-TANPA-KEY-2428240069\",\n  \"judul\": \"Tanpa API Key\",\n  \"pelukis\": \"M. Rizki Algipari\",\n  \"aliran\": \"realisme\",\n  \"harga\": 1000000\n}",
+              "raw": "{\n  \"kodeFilm\": \"FLM-TANPA-KEY-2428240069\",\n  \"judul\": \"Tanpa API Key\",\n  \"film\": \"M. Rizki Algipari\",\n  \"genre\": \"sutradara\",\n  \"durasiMenit\": 1000000\n}",
               "options": { "raw": { "language": "json" } }
             },
-            "url": { "raw": "{{base_url}}/paintings", "host": ["{{base_url}}"], "path": ["paintings"] }
+            "url": { "raw": "{{base_url}}/Bioskop", "host": ["{{base_url}}"], "path": ["Bioskop"] }
           },
           "response": []
         },
@@ -601,10 +601,10 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"pelukis\": \"M. Rizki Algipari\",\n  \"aliran\": \"realisme\",\n  \"harga\": 1000000\n}",
+              "raw": "{\n  \"film\": \"M. Rizki Algipari\",\n  \"genre\": \"sutradara\",\n  \"durasiMenit\": 1000000\n}",
               "options": { "raw": { "language": "json" } }
             },
-            "url": { "raw": "{{base_url}}/paintings", "host": ["{{base_url}}"], "path": ["paintings"] }
+            "url": { "raw": "{{base_url}}/Bioskop", "host": ["{{base_url}}"], "path": ["Bioskop"] }
           },
           "response": []
         },
@@ -633,10 +633,10 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"judul\":\"x\",,\"pelukis\":\"y\"}",
+              "raw": "{\"judul\":\"x\",,\"film\":\"y\"}",
               "options": { "raw": { "language": "json" } }
             },
-            "url": { "raw": "{{base_url}}/paintings", "host": ["{{base_url}}"], "path": ["paintings"] }
+            "url": { "raw": "{{base_url}}/Bioskop", "host": ["{{base_url}}"], "path": ["Bioskop"] }
           },
           "response": []
         },
@@ -661,9 +661,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/paintings/000000000000000000000000",
+              "raw": "{{base_url}}/Bioskop/000000000000000000000000",
               "host": ["{{base_url}}"],
-              "path": ["paintings", "000000000000000000000000"]
+              "path": ["Bioskop", "000000000000000000000000"]
             }
           },
           "response": []
@@ -693,17 +693,17 @@
           "response": []
         },
         {
-          "name": "POST kodeLukisan duplikat",
+          "name": "POST kodeFilm duplikat",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 409 Conflict\", () => pm.response.to.have.status(409));",
-                  "pm.test(\"Pesan menyebut kodeLukisan duplikat\", () => {",
+                  "pm.test(\"Pesan menyebut kodeFilm duplikat\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.status).to.eql(\"error\");",
-                  "  pm.expect(b.message).to.include(\"Data duplikat: kodeLukisan\");",
+                  "  pm.expect(b.message).to.include(\"Data duplikat: kodeFilm\");",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -718,15 +718,15 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"kodeLukisan\": \"LKS-2428240069-01\",\n  \"judul\": \"Kode Duplikat\",\n  \"pelukis\": \"Rahmat Hidayat\",\n  \"aliran\": \"realisme\",\n  \"harga\": 1000000\n}",
+              "raw": "{\n  \"kodeFilm\": \"FLM-2428240069-01\",\n  \"judul\": \"Kode Duplikat\",\n  \"film\": \"Rahmat Hidayat\",\n  \"genre\": \"sutradara\",\n  \"durasiMenit\": 1000000\n}",
               "options": { "raw": { "language": "json" } }
             },
-            "url": { "raw": "{{base_url}}/paintings", "host": ["{{base_url}}"], "path": ["paintings"] }
+            "url": { "raw": "{{base_url}}/Bioskop", "host": ["{{base_url}}"], "path": ["Bioskop"] }
           },
           "response": []
         },
         {
-          "name": "POST nama pelukis duplikat",
+          "name": "POST nama film duplikat",
           "event": [
             {
               "listen": "test",
@@ -754,21 +754,21 @@
               "raw": "{\n  \"nama\": \"Rahmat Hidayat\"\n}",
               "options": { "raw": { "language": "json" } }
             },
-            "url": { "raw": "{{base_url}}/artists", "host": ["{{base_url}}"], "path": ["artists"] }
+            "url": { "raw": "{{base_url}}/film", "host": ["{{base_url}}"], "path": ["film"] }
           },
           "response": []
         },
         {
-          "name": "POST harga di bawah minimum",
+          "name": "POST durasiMenit di bawah minimum",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 400 Bad Request\", () => pm.response.to.have.status(400));",
-                  "pm.test(\"Pesan harga tidak boleh negatif\", () => {",
+                  "pm.test(\"Pesan durasiMenit tidak boleh negatif\", () => {",
                   "  const b = pm.response.json();",
-                  "  pm.expect(b.message).to.eql(\"Field harga tidak boleh negatif\");",
+                  "  pm.expect(b.message).to.eql(\"Field durasiMenit tidak boleh negatif\");",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -783,10 +783,10 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"kodeLukisan\": \"LKS-BARU-2428240069\",\n  \"judul\": \"Harga Negatif\",\n  \"pelukis\": \"Rahmat Hidayat\",\n  \"aliran\": \"realisme\",\n  \"harga\": -1\n}",
+              "raw": "{\n  \"kodeFilm\": \"FLM-BARU-2428240069\",\n  \"judul\": \"DurasiMenit Negatif\",\n  \"film\": \"Rahmat Hidayat\",\n  \"genre\": \"sutradara\",\n  \"durasiMenit\": -1\n}",
               "options": { "raw": { "language": "json" } }
             },
-            "url": { "raw": "{{base_url}}/paintings", "host": ["{{base_url}}"], "path": ["paintings"] }
+            "url": { "raw": "{{base_url}}/Bioskop", "host": ["{{base_url}}"], "path": ["Bioskop"] }
           },
           "response": []
         },
@@ -810,12 +810,12 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{base_url}}/paintings/abc", "host": ["{{base_url}}"], "path": ["paintings", "abc"] }
+            "url": { "raw": "{{base_url}}/Bioskop/abc", "host": ["{{base_url}}"], "path": ["Bioskop", "abc"] }
           },
           "response": []
         },
         {
-          "name": "Filter aliran tanpa hasil",
+          "name": "Filter genre tanpa hasil",
           "event": [
             {
               "listen": "test",
@@ -836,27 +836,27 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/paintings?aliran=tidak_ada",
+              "raw": "{{base_url}}/Bioskop?genre=tidak_ada",
               "host": ["{{base_url}}"],
-              "path": ["paintings"],
-              "query": [{ "key": "aliran", "value": "tidak_ada" }]
+              "path": ["Bioskop"],
+              "query": [{ "key": "genre", "value": "tidak_ada" }]
             }
           },
           "response": []
         },
         {
-          "name": "Projection UTS (kodeLukisan,judul,harga,aliran)",
+          "name": "Projection UTS (kodeFilm,judul,durasiMenit,genre)",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
                   "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Hanya _id, kodeLukisan, judul, harga, dan aliran yang dikembalikan\", () => {",
+                  "pm.test(\"Hanya _id, kodeFilm, judul, durasiMenit, dan genre yang dikembalikan\", () => {",
                   "  const b = pm.response.json();",
                   "  pm.expect(b.data).to.be.an(\"array\").that.is.not.empty;",
-                  "  const diharapkan = [\"_id\", \"kodeLukisan\", \"judul\", \"harga\", \"aliran\"].sort();",
-                  "  b.data.forEach((lukisan) => pm.expect(Object.keys(lukisan).sort()).to.eql(diharapkan));",
+                  "  const diharapkan = [\"_id\", \"kodeFilm\", \"judul\", \"durasiMenit\", \"genre\"].sort();",
+                  "  b.data.forEach((Bioskop) => pm.expect(Object.keys(Bioskop).sort()).to.eql(diharapkan));",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -867,10 +867,10 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/paintings?fields=kodeLukisan,judul,harga,aliran",
+              "raw": "{{base_url}}/Bioskop?fields=kodeFilm,judul,durasiMenit,genre",
               "host": ["{{base_url}}"],
-              "path": ["paintings"],
-              "query": [{ "key": "fields", "value": "kodeLukisan,judul,harga,aliran" }]
+              "path": ["Bioskop"],
+              "query": [{ "key": "fields", "value": "kodeFilm,judul,durasiMenit,genre" }]
             }
           },
           "response": []

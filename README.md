@@ -1,13 +1,13 @@
 # si2b_kuis1_mrizkialgipari
 
-RESTful API Express.js + **MongoDB** untuk data lukisan (galeri seni).
+RESTful API Express.js + **MongoDB** untuk data Bioskop (galeri seni).
 
 - **Nama:** M. Rizki Algipari
 - **NIM:** 2428240069
 - **Kelas:** SI5B
 - **Absen:** 14
-- **Topik:** Topik 14 — Galeri Seni: Lukisan
-- **Resource:** `/paintings` (relasi ke `/artists`)
+- **Topik:** tahun — Galeri Seni: Bioskop
+- **Resource:** `/Bioskop` (relasi ke `/film`)
 
 ## Tautan
 
@@ -21,7 +21,7 @@ Prasyarat: server MongoDB berjalan di `127.0.0.1:27017` (misalnya `mongod --dbpa
 ```bash
 cp .env.example .env      # lalu isi API_KEY dan MONGODB_URI
 npm install
-npm run seed              # mengisi 3 pelukis dan 6 lukisan
+npm run seed              # mengisi 3 film dan 6 Bioskop
 npm start
 ```
 
@@ -54,127 +54,127 @@ bukti/                  tangkapan layar bukti pengujian
 
 ```env
 API_KEY=isi_api_key_anda
-MONGODB_URI=mongodb://127.0.0.1:27017/si2b_lukisan
+MONGODB_URI=mongodb://127.0.0.1:27017/si2b_Bioskop
 ```
 
 ## Relasi Antar Schema
 
-**Embedding** — detail `ukuran` (objek) dan daftar `kritik` (array subdokumen) tersimpan di dalam dokumen lukisan.
+**Embedding** — detail `drama` (objek) dan daftar `komedi` (array subdokumen) tersimpan di dalam dokumen Bioskop.
 
-**Referencing** — field `pelukis` pada `paintings` berisi ObjectId yang menunjuk dokumen pada collection `artists`. Saat dibaca, referensi tersebut di-`populate` menjadi objek pelukis.
+**Referencing** — field `film` pada `Bioskop` berisi ObjectId yang menunjuk dokumen pada collection `film`. Saat dibaca, referensi tersebut di-`populate` menjadi objek film.
 
-### Field `paintings`
+### Field `Bioskop`
 
 | Field | Tipe | Wajib | Keterangan |
 |---|---|---|---|
 | `_id` | ObjectId | otomatis | Dibuat otomatis oleh MongoDB |
-| `kodeLukisan` | string | ya | Kode unik lukisan (indeks unik, mis. `LKS-2428240069-01`) |
-| `judul` | string | ya | Judul lukisan |
-| `pelukis` | ObjectId → `artists` | ya | Referensi ke dokumen pelukis |
-| `aliran` | string | ya | Aliran seni (disimpan huruf kecil) |
-| `tahunDibuat` | number | tidak | Tahun pembuatan |
-| `harga` | number | ya | Harga lukisan |
-| `ukuran` | object | tidak | `{ tinggi, lebar, media }` — tertanam |
-| `kritik` | array | tidak | `[{ nama, rating (1–5), komentar, tanggal }]` — tertanam |
+| `kodeFilm` | string | ya | Kode unik Bioskop (indeks unik, mis. `FLM-2428240069-01`) |
+| `judul` | string | ya | Judul Bioskop |
+| `film` | ObjectId → `film` | ya | Referensi ke dokumen film |
+| `genre` | string | ya | Aliran seni (disimpan huruf kecil) |
+| `createdAt` | number | tidak | Tahun pembuatan |
+| `durasiMenit` | number | ya | DurasiMenit Bioskop |
+| `drama` | object | tidak | `{ tinggi, lebar, media }` — tertanam |
+| `komedi` | array | tidak | `[{ nama, rating (1–5), komentar, tanggal }]` — tertanam |
 
-### Field `artists`
+### Field `film`
 
 | Field | Tipe | Wajib | Keterangan |
 |---|---|---|---|
 | `_id` | ObjectId | otomatis | Dibuat otomatis oleh MongoDB |
 | `nama` | string | ya | Unik |
 | `negara` | string | tidak | Default `Indonesia` |
-| `tahunLahir` | number | tidak | Tahun lahir pelukis |
-| `aliran` | string | tidak | Aliran utama pelukis |
+| `tahunLahir` | number | tidak | Tahun lahir film |
+| `genre` | string | tidak | Aliran utama film |
 | `bio` | string | tidak | Keterangan singkat |
 
-Saat POST/PUT, field `pelukis` boleh berisi ObjectId pelukis yang sudah ada **atau** nama pelukis. Nama yang belum terdaftar akan dibuatkan dokumen `artists` baru secara otomatis.
+Saat POST/PUT, field `film` boleh berisi ObjectId film yang sudah ada **atau** nama film. Nama yang belum terdaftar akan dibuatkan dokumen `film` baru secara otomatis.
 
 ## Daftar Endpoint
 
 | Method | Endpoint | API key | Keterangan |
 |---|---|---|---|
 | GET | `/` | Tidak | Informasi API |
-| GET | `/paintings` | Tidak | Daftar lukisan dengan filter, sorting, pagination, projection |
-| GET | `/paintings/:id` | Tidak | Satu lukisan (pelukis ter-populate, kritik & ukuran tertanam) |
-| POST | `/paintings` | Ya (`x-api-key`) | Menambah lukisan |
-| PUT | `/paintings/:id` | Ya (`x-api-key`) | Mengubah seluruh field lukisan |
-| DELETE | `/paintings/:id` | Ya (`x-api-key`) | Menghapus lukisan (204 No Content) |
-| GET | `/artists` | Tidak | Daftar pelukis beserta `jumlahLukisan` |
-| GET | `/artists/:id` | Tidak | Detail pelukis beserta daftar lukisannya |
-| POST | `/artists` | Ya (`x-api-key`) | Menambah pelukis |
+| GET | `/Bioskop` | Tidak | Daftar Bioskop dengan filter, sorting, pagination, projection |
+| GET | `/Bioskop/:id` | Tidak | Satu Bioskop (film ter-populate, komedi & drama tertanam) |
+| POST | `/Bioskop` | Ya (`x-api-key`) | Menambah Bioskop |
+| PUT | `/Bioskop/:id` | Ya (`x-api-key`) | Mengubah seluruh field Bioskop |
+| DELETE | `/Bioskop/:id` | Ya (`x-api-key`) | Menghapus Bioskop (204 No Content) |
+| GET | `/film` | Tidak | Daftar film beserta `jumlahBioskop` |
+| GET | `/film/:id` | Tidak | Detail film beserta daftar Bioskopnya |
+| POST | `/film` | Ya (`x-api-key`) | Menambah film |
 
 Endpoint lain menghasilkan `404` dengan pesan `Endpoint tidak ditemukan`.
 
-## Parameter Query `GET /paintings`
+## Parameter Query `GET /Bioskop`
 
 | Parameter | Contoh | Keterangan |
 |---|---|---|
-| `aliran` | `?aliran=realisme` | Filter aliran (tidak membedakan huruf besar/kecil) |
-| `pelukis` | `?pelukis=Rahmat Hidayat` | Filter berdasarkan nama atau ObjectId pelukis |
-| `hargaMin` | `?hargaMin=5000000` | Batas bawah harga |
-| `hargaMax` | `?hargaMax=9000000` | Batas atas harga |
-| `tahunDibuat` | `?tahunDibuat=2023` | Filter tahun pembuatan |
+| `genre` | `?genre=sutradara` | Filter genre (tidak membedakan huruf besar/kecil) |
+| `film` | `?film=Rahmat Hidayat` | Filter berdasarkan nama atau ObjectId film |
+| `durasiMenitMin` | `?durasiMenitMin=5000000` | Batas bawah durasiMenit |
+| `durasiMenitMax` | `?durasiMenitMax=9000000` | Batas atas durasiMenit |
+| `createdAt` | `?createdAt=2023` | Filter tahun pembuatan |
 | `q` | `?q=musi` | Cari judul (substring, tidak membedakan huruf besar/kecil) |
-| `sort` | `?sort=-harga,judul` | Daftar field dipisah koma; awalan `-` berarti menurun |
+| `sort` | `?sort=-durasiMenit,judul` | Daftar field dipisah koma; awalan `-` berarti menurun |
 | `page` | `?page=2` | Halaman, minimal 1 (default 1) |
 | `limit` | `?limit=5` | Jumlah per halaman, 1–50 (default 10) |
-| `fields` | `?fields=judul,pelukis,harga` | Projection: hanya field yang disebut yang dikembalikan |
+| `fields` | `?fields=judul,film,durasiMenit` | Projection: hanya field yang disebut yang dikembalikan |
 
-Field `sort` yang diizinkan: `judul`, `aliran`, `tahunDibuat`, `harga`, `createdAt`.
-Field `fields` yang diizinkan: `judul`, `pelukis`, `aliran`, `tahunDibuat`, `harga`, `ukuran`, `kritik`, `createdAt`, `updatedAt`.
+Field `sort` yang diizinkan: `judul`, `genre`, `createdAt`, `durasiMenit`, `createdAt`.
+Field `fields` yang diizinkan: `judul`, `film`, `genre`, `createdAt`, `durasiMenit`, `drama`, `komedi`, `createdAt`, `updatedAt`.
 Nilai di luar daftar, `page`/`limit` bukan angka, atau `page` < 1 menghasilkan `400` beserta pesan yang menyebut field bermasalah.
 
-Contoh respons `GET /paintings?page=2&limit=2`:
+Contoh respons `GET /Bioskop?page=2&limit=2`:
 
 ```json
 {
   "status": "success",
-  "message": "Data lukisan berhasil diambil",
+  "message": "Data Bioskop berhasil diambil",
   "data": ["..."],
   "pagination": { "page": 2, "limit": 2, "total": 6, "totalPages": 3, "hasNext": true, "hasPrev": true }
 }
 ```
 
-## Contoh Body POST `/paintings`
+## Contoh Body POST `/Bioskop`
 
 ```json
 {
-  "kodeLukisan": "LKS-2428240069-07",
+  "kodeFilm": "FLM-2428240069-07",
   "judul": "Senja di Musi",
-  "pelukis": "Rahmat Hidayat",
-  "aliran": "realisme",
-  "tahunDibuat": 2023,
-  "harga": 7500000,
-  "ukuran": { "tinggi": 80, "lebar": 60, "media": "Kanvas" },
-  "kritik": [
+  "film": "Rahmat Hidayat",
+  "genre": "sutradara",
+  "createdAt": 2023,
+  "durasiMenit": 7500000,
+  "drama": { "tinggi": 80, "lebar": 60, "media": "Kanvas" },
+  "komedi": [
     { "nama": "Andi Saputra", "rating": 5, "komentar": "Warna senja tersaji sangat hidup." }
   ]
 }
 ```
 
-## Contoh Body PUT `/paintings/:id`
+## Contoh Body PUT `/Bioskop/:id`
 
 ```json
 {
-  "kodeLukisan": "LKS-2428240069-01",
+  "kodeFilm": "FLM-2428240069-01",
   "judul": "Senja di Musi (Revisi)",
-  "pelukis": "Rahmat Hidayat",
-  "aliran": "impresionisme",
-  "tahunDibuat": 2024,
-  "harga": 8000000
+  "film": "Rahmat Hidayat",
+  "genre": "impresionisme",
+  "createdAt": 2024,
+  "durasiMenit": 8000000
 }
 ```
 
-`tahunDibuat` bersifat opsional. Jika tidak dikirim saat `PUT`, nilainya menjadi `null`.
+`createdAt` bersifat opsional. Jika tidak dikirim saat `PUT`, nilainya menjadi `null`.
 
 ## Pengujian Otomatis
 
 Jalankan server lebih dulu, lalu:
 
 ```bash
-npx --yes newman run postman/Tugas3_Lukisan_MongoDB.postman_collection.json \
-  -e postman/Tugas3_Lukisan_MongoDB.postman_environment.json --reporters cli
+npx --yes newman run postman/Tugas3_Bioskop_MongoDB.postman_collection.json \
+  -e postman/Tugas3_Bioskop_MongoDB.postman_environment.json --reporters cli
 ```
 
 Hasil yang diharapkan: 27 request, 59 assertions, 0 failure.
@@ -186,21 +186,21 @@ Tangkapan layar tiap pengujian tersimpan di folder `bukti/`:
 | Berkas | Skenario |
 |---|---|
 | `01-mongodb-server.png` | Server MongoDB berjalan (`waiting for connections` pada port 27017) |
-| `02-seed-data.png` | `npm run seed` mengisi 3 pelukis dan 6 lukisan |
+| `02-seed-data.png` | `npm run seed` mengisi 3 film dan 6 Bioskop |
 | `03-server-start.png` | `npm start` terkoneksi ke MongoDB dan siap di port 3000 |
-| `04-get-semua-lukisan.png` | `GET /paintings` mengembalikan seluruh data beserta metadata pagination |
-| `05-get-detail-lukisan.png` | `GET /paintings/:id` menampilkan kritik dan ukuran tertanam |
-| `06-filter-aliran.png` | Filter `aliran=realisme` |
-| `07-filter-harga.png` | Filter `hargaMin` dan `hargaMax` |
-| `08-filter-pelukis.png` | Filter `pelukis=Rahmat Hidayat` |
-| `09-sorting-harga.png` | Sorting `sort=-harga` |
+| `04-get-semua-Bioskop.png` | `GET /Bioskop` mengembalikan seluruh data beserta metadata pagination |
+| `05-get-detail-Bioskop.png` | `GET /Bioskop/:id` menampilkan komedi dan drama tertanam |
+| `06-filter-genre.png` | Filter `genre=sutradara` |
+| `07-filter-durasiMenit.png` | Filter `durasiMenitMin` dan `durasiMenitMax` |
+| `08-filter-film.png` | Filter `film=Rahmat Hidayat` |
+| `09-sorting-durasiMenit.png` | Sorting `sort=-durasiMenit` |
 | `10-pagination.png` | Pagination `page=2&limit=2` |
-| `11-projection.png` | Projection `fields=judul,pelukis,harga` |
-| `12-embedding-referencing.png` | Dokumen mentah (pelukis berupa ObjectId) dibandingkan respons API (pelukis ter-populate) |
-| `13-post-lukisan.png` | `POST /paintings` berhasil membuat lukisan dan pelukis baru |
-| `14-artists.png` | `GET /artists` beserta `jumlahLukisan` dan `GET /artists/:id` |
+| `11-projection.png` | Projection `fields=judul,film,durasiMenit` |
+| `12-embedding-referencing.png` | Dokumen mentah (film berupa ObjectId) dibandingkan respons API (film ter-populate) |
+| `13-post-Bioskop.png` | `POST /Bioskop` berhasil membuat Bioskop dan film baru |
+| `14-film.png` | `GET /film` beserta `jumlahBioskop` dan `GET /film/:id` |
 | `15-error-404.png` | ID tidak ditemukan menghasilkan 404 |
 | `16-error-401.png` | POST tanpa API key menghasilkan 401 |
 | `17-error-400.png` | POST tanpa `judul` menghasilkan 400 |
 | `18-newman.png` | Seluruh assertion koleksi Tugas 3 lulus |
-| `19-error-409.png` | POST dengan `kodeLukisan` duplikat menghasilkan 409 |
+| `19-error-409.png` | POST dengan `kodeFilm` duplikat menghasilkan 409 |

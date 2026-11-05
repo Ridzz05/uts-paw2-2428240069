@@ -1,26 +1,26 @@
-// Controller resource /artists: pelukis beserta jumlah lukisannya.
+// Controller resource /film: film beserta jumlah Bioskopnya.
 const mongoose = require("mongoose");
-const { Artist } = require("../models/artistsModel");
-const { Painting } = require("../models/paintingsModel");
+const { Film } = require("../models/filmModel");
+const { Bioskop } = require("../models/BioskopModel");
 
 // Daftar field yang boleh dipakai sorting dan projection pada endpoint ini.
 const SORT_FIELDS = ["nama", "negara", "tahunLahir", "createdAt"];
 
-// GET /artists — daftar pelukis dengan sorting, pagination, dan projection.
+// GET /film — daftar film dengan sorting, pagination, dan projection.
 async function getAll(req, res) {
   const { sort, page, limit, skip, fields } = req.opsi;
 
-  let query = Artist.find().sort(sort).skip(skip).limit(limit);
+  let query = Film.find().sort(sort).skip(skip).limit(limit);
   if (fields) {
     query = query.select(fields);
   }
 
-  const [data, total] = await Promise.all([query.lean(), Artist.countDocuments()]);
+  const [data, total] = await Promise.all([query.lean(), Film.countDocuments()]);
 
   const lengkap = await Promise.all(
-    data.map(async (artist) => ({
-      ...artist,
-      jumlahLukisan: await Painting.countDocuments({ pelukis: artist._id }),
+    data.map(async (film) => ({
+      ...film,
+      jumlahBioskop: await Bioskop.countDocuments({ film: film._id }),
     }))
   );
 
@@ -28,7 +28,7 @@ async function getAll(req, res) {
 
   res.status(200).json({
     status: "success",
-    message: "Data pelukis berhasil diambil",
+    message: "Data film berhasil diambil",
     data: lengkap,
     pagination: {
       page,
@@ -41,7 +41,7 @@ async function getAll(req, res) {
   });
 }
 
-// GET /artists/:id — detail pelukis beserta daftar lukisannya.
+// GET /film/:id — detail film beserta daftar Bioskopnya.
 async function getById(req, res) {
   const { id } = req.params;
 
@@ -49,9 +49,9 @@ async function getById(req, res) {
     return res.status(400).json({ status: "error", message: "Format id tidak valid", data: null });
   }
 
-  const artist = await Artist.findById(id).lean();
+  const film = await Film.findById(id).lean();
 
-  if (!artist) {
+  if (!film) {
     return res.status(404).json({
       status: "error",
       message: `Data dengan id ${id} tidak ditemukan`,
@@ -59,18 +59,18 @@ async function getById(req, res) {
     });
   }
 
-  const lukisan = await Painting.find({ pelukis: artist._id }).select("judul aliran tahunDibuat harga");
+  const Bioskop = await Bioskop.find({ film: film._id }).select("judul genre createdAt durasiMenit");
 
   res.status(200).json({
     status: "success",
-    message: "Data pelukis berhasil diambil",
-    data: { ...artist, lukisan },
+    message: "Data film berhasil diambil",
+    data: { ...film, Bioskop },
   });
 }
 
-// POST /artists — tambah pelukis; 400 bila body tidak valid, 201 bila sukses.
+// POST /film — tambah film; 400 bila body tidak valid, 201 bila sukses.
 async function create(req, res) {
-  const { nama, negara, tahunLahir, aliran, bio } = req.body;
+  const { nama, negara, tahunLahir, genre, bio } = req.body;
 
   if (typeof nama !== "string" || nama.trim() === "") {
     return res.status(400).json({ status: "error", message: "Field nama wajib diisi", data: null });
@@ -80,12 +80,12 @@ async function create(req, res) {
     return res.status(400).json({ status: "error", message: "Field tahunLahir harus berupa angka", data: null });
   }
 
-  const artist = await Artist.create({ nama, negara, tahunLahir, aliran, bio });
+  const film = await Film.create({ nama, negara, tahunLahir, genre, bio });
 
   res.status(201).json({
     status: "success",
-    message: "Data pelukis berhasil ditambahkan",
-    data: artist,
+    message: "Data film berhasil ditambahkan",
+    data: film,
   });
 }
 

@@ -3,8 +3,8 @@
 // Nama    : M. Rizki Algipari
 // NIM     : 2428240069
 // Kelas   : SI5B
-// Topik 14: Galeri Seni - Lukisan
-// Resource: /paintings (referensi ke collection artists, embed ukuran & kritik)
+// tahun: Galeri Seni - Bioskop
+// Resource: /Bioskop (referensi ke collection film, embed drama & komedi)
 // ===========================================================================
 
 // Muat variabel lingkungan dari .env (harus paling awal).
@@ -15,8 +15,8 @@ const cors = require("cors");
 
 const { connectDB } = require("./config/db");
 const { logger } = require("./middlewares/logger");
-const paintingsRoutes = require("./routes/paintingsRoutes");
-const artistsRoutes = require("./routes/artistsRoutes");
+const BioskopRoutes = require("./routes/BioskopRoutes");
+const filmRoutes = require("./routes/filmRoutes");
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
 
 // Membuat instance aplikasi Express.
@@ -33,26 +33,26 @@ app.get("/", (req, res) => {
     nama: "M. Rizki Algipari",
     nim: "2428240069",
     kelas: "SI5B",
-    topik: "Topik 14 - Galeri Seni: Lukisan",
+    topik: "tahun - Galeri Seni: Bioskop",
     database: "MongoDB",
-    resource: "/paintings",
+    resource: "/Bioskop",
     endpoints: [
       "GET /",
-      "GET /paintings (filter, sort, page/limit, fields)",
-      "GET /paintings/:id",
-      "POST /paintings (x-api-key)",
-      "PUT /paintings/:id (x-api-key)",
-      "DELETE /paintings/:id (x-api-key)",
-      "GET /artists",
-      "GET /artists/:id",
-      "POST /artists (x-api-key)",
+      "GET /Bioskop (filter, sort, page/limit, fields)",
+      "GET /Bioskop/:id",
+      "POST /Bioskop (x-api-key)",
+      "PUT /Bioskop/:id (x-api-key)",
+      "DELETE /Bioskop/:id (x-api-key)",
+      "GET /film",
+      "GET /film/:id",
+      "POST /film (x-api-key)",
     ],
   });
 });
 
-// Route resource /paintings dan /artists.
-app.use("/paintings", paintingsRoutes);
-app.use("/artists", artistsRoutes);
+// Route resource /Bioskop dan /film.
+app.use("/Bioskop", BioskopRoutes);
+app.use("/film", filmRoutes);
 
 // Catch-all 404 untuk endpoint tak dikenal.
 app.use(notFound);

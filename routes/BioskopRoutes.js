@@ -1,13 +1,13 @@
-// Rute resource /paintings.
+// Rute resource /Bioskop.
 const express = require("express");
-const controller = require("../controllers/paintingsController");
+const controller = require("../controllers/BioskopController");
 const { cekApiKey } = require("../middlewares/cekApiKey");
 const { validasiQuery } = require("../middlewares/validasiQuery");
 
 const router = express.Router();
 
 // Filter numerik yang divalidasi middleware.
-const ANGKA = ["hargaMin", "hargaMax", "tahunDibuat"];
+const ANGKA = ["durasiMenitMin", "durasiMenitMax", "createdAt"];
 
 router.get(
   "/",

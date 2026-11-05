@@ -8,7 +8,7 @@ function tolak(res, message) {
   return res.status(400).json({ status: "error", message, data: null });
 }
 
-// Ubah "harga,-judul" menjadi { harga: 1, judul: -1 }.
+// Ubah "durasiMenit,-judul" menjadi { durasiMenit: 1, judul: -1 }.
 function uraiSort(nilai, diizinkan) {
   const hasil = {};
 

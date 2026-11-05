@@ -1,7 +1,7 @@
 {
   "name": "tugas1-restful-2428240069",
   "version": "1.0.0",
-  "description": "RESTful API Galeri Seni - Lukisan (Topik 14)",
+  "description": "RESTful API Galeri Seni - Bioskop (tahun)",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

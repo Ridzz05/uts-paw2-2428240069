@@ -15,21 +15,22 @@
 set -euo pipefail
 
 # ------------------- ISIAN (kosong = tidak diubah) --------------------------
-MAIN_NEW=""        # resource utama + sebutan Indonesia.  contoh: menu
-SUP_NEW=""         # resource pendukung + sebutan Indonesia. contoh: kedai
-UNIK_NEW=""        # [unik]                        contoh: kodeMenu
-TEKS_NEW=""        # [teks] bila bukan "judul"     contoh: nama
-ANGKA_NEW=""       # [angka] bila bukan "harga"    contoh: ukuranMb
-FILTER_NEW=""      # [filter]                      contoh: kategori
-EMBED1_NEW=""      # [embed] ke-1                  contoh: varian
-EMBED2_NEW=""      # [embed] ke-2                  contoh: ulasan
-EXTRA_NEW=""       # field angka opsional          contoh: tahunBuka
-PREFIX_NEW=""      # awalan [unik] di seed         contoh: MNU-
-VAL1_NEW=""        # nilai [filter] ke-1 di seed   contoh: makanan
+MAIN_NEW="Bioskop"        # resource utama + sebutan Indonesia.  contoh: menu
+SUP_NEW="film"         # resource pendukung + sebutan Indonesia. contoh: kedai
+UNIK_NEW="kodeFilm"        # [unik]                        contoh: kodeMenu
+TEKS_NEW="judul"        # [teks] bila bukan "judul"     contoh: nama
+ANGKA_NEW="durasiMenit"       # [angka] bila bukan "harga"    contoh: ukuranMb
+FILTER_NEW="genre"      # [filter]                      contoh: kategori
+EMBED1_NEW="drama"      # [embed] ke-1                  contoh: varian
+EMBED2_NEW="komedi"      # [embed] ke-2                  contoh: ulasan
+EMBED3_NEW="aksi"
+EXTRA_NEW="createdAt"       # field angka opsional          contoh: tahunBuka
+PREFIX_NEW="FLM-"      # awalan [unik] di seed         contoh: MNU-
+VAL1_NEW="sutradara"        # nilai [filter] ke-1 di seed   contoh: makanan
 VAL2_NEW=""        # nilai [filter] ke-2 di seed   contoh: minuman
 VAL3_NEW=""        # nilai [filter] ke-3 di seed   contoh: dessert
 MEDIA_NEW=""       # teks di subdokumen embed      contoh: Porsi
-TOPIKNO_NEW=""     # nomor topik                   contoh: Topik 07
+TOPIKNO_NEW="tahun"     # nomor topik                   contoh: Topik 07
 TOPIK_NEW=""       # nama topik tanpa nomor        contoh: Menu Kedai
 # ---------------------------------------------------------------------------
 
