@@ -1,0 +1,328 @@
+{
+  "info": {
+    "_postman_id": "c41d63f8-9c14-4d21-a568-242824006914",
+    "name": "Tugas 1 SI5B - RESTful API Lukisan - M Rizki Algipari",
+    "description": "Koleksi uji semua endpoint Topik 14, termasuk skenario gagal 400/404. Import lalu jalankan request satu per satu.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "rahasia2428240069",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Info API",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": []
+        }
+      }
+    },
+    {
+      "name": "Ambil semua lukisan",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/paintings",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "paintings"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Ambil lukisan ID 1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/paintings/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "paintings",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "ID tidak ditemukan (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/paintings/99",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "paintings",
+            "99"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Filter aliran realisme",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/paintings?aliran=realisme",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "paintings"
+          ],
+          "query": [
+            {
+              "key": "aliran",
+              "value": "realisme"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Filter tanpa hasil (array kosong)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/paintings?aliran=surrealisme",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "paintings"
+          ],
+          "query": [
+            {
+              "key": "aliran",
+              "value": "surrealisme"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Tambah lukisan",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/paintings",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "paintings"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"judul\": \"Senja di Musi\",\n  \"pelukis\": \"Rahmat Hidayat\",\n  \"aliran\": \"realisme\",\n  \"tahunDibuat\": 2023,\n  \"harga\": 7500000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Tambah tanpa judul (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/paintings",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "paintings"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pelukis\": \"Rahmat Hidayat\",\n  \"aliran\": \"realisme\",\n  \"tahunDibuat\": 2023,\n  \"harga\": 7500000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Perbarui lukisan ID 1",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/paintings/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "paintings",
+            "1"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"judul\": \"Senja di Musi\",\n  \"pelukis\": \"Rahmat Hidayat\",\n  \"aliran\": \"realisme\",\n  \"tahunDibuat\": 2023,\n  \"harga\": 7500000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Perbarui ID tidak ada (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/paintings/99",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "paintings",
+            "99"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"judul\": \"Senja di Musi\",\n  \"pelukis\": \"Rahmat Hidayat\",\n  \"aliran\": \"realisme\",\n  \"tahunDibuat\": 2023,\n  \"harga\": 7500000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Hapus lukisan ID 1",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/paintings/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "paintings",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Hapus ID tidak ada (404)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/paintings/99",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "paintings",
+            "99"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Endpoint tidak terdaftar (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/tidak-ada",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "tidak-ada"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,600 @@
+{
+  "info": {
+    "_postman_id": "b7f3c1d2-2428-4006-9069-000000000002",
+    "name": "Tugas 2 - API Lukisan",
+    "description": "Collection otomasi CRUD dan skenario gagal untuk API Galeri Seni - Lukisan (M. Rizki Algipari / 2428240069).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "CRUD",
+      "item": [
+        {
+          "name": "Info API",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Respons berupa objek informasi API\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.be.an(\"object\");",
+                  "  pm.expect(b).to.have.property(\"nama\");",
+                  "  pm.expect(b).to.have.property(\"nim\");",
+                  "  pm.expect(b).to.have.property(\"endpoints\").that.is.an(\"array\");",
+                  "});",
+                  "pm.test(\"Identitas dan resource sesuai\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.nama).to.eql(\"M. Rizki Algipari\");",
+                  "  pm.expect(b.nim).to.eql(\"2428240069\");",
+                  "  pm.expect(b.resource).to.eql(\"/paintings\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ambil semua lukisan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Respons berupa array\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.be.an(\"array\");",
+                  "});",
+                  "pm.test(\"Minimal berisi tiga lukisan awal\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.length).to.be.at.least(3);",
+                  "});",
+                  "pm.test(\"Setiap lukisan memiliki field wajib\", () => {",
+                  "  const b = pm.response.json();",
+                  "  b.forEach((lukisan) => {",
+                  "    pm.expect(lukisan).to.have.all.keys(\"id\", \"judul\", \"pelukis\", \"aliran\", \"tahunDibuat\", \"harga\");",
+                  "  });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/paintings",
+              "host": ["{{base_url}}"],
+              "path": ["paintings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ambil lukisan berdasarkan ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Lukisan dengan id 1 ditemukan\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.be.an(\"object\");",
+                  "  pm.expect(b.id).to.eql(1);",
+                  "});",
+                  "pm.test(\"Judul lukisan id 1 sesuai data awal\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.judul).to.eql(\"Senja di Musi\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/paintings/1",
+              "host": ["{{base_url}}"],
+              "path": ["paintings", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter lukisan berdasarkan aliran",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Respons berupa array\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.be.an(\"array\");",
+                  "});",
+                  "pm.test(\"Hasil filter hanya berisi aliran realisme\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.length).to.be.at.least(1);",
+                  "  b.forEach((lukisan) => pm.expect(lukisan.aliran).to.eql(\"realisme\"));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/paintings?aliran=realisme",
+              "host": ["{{base_url}}"],
+              "path": ["paintings"],
+              "query": [
+                {
+                  "key": "aliran",
+                  "value": "realisme"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tambah lukisan baru",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201 Created\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Status respons bernilai success\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.status).to.eql(\"success\");",
+                  "  pm.expect(b.message).to.eql(\"Data berhasil ditambahkan\");",
+                  "});",
+                  "pm.test(\"Data lukisan baru memiliki id berupa angka\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.data).to.be.an(\"object\");",
+                  "  pm.expect(b.data.id).to.be.a(\"number\");",
+                  "});",
+                  "pm.test(\"Judul dan pelukis lukisan baru sesuai\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.data.judul).to.eql(\"Lukisan Uji Otomasi\");",
+                  "  pm.expect(b.data.pelukis).to.eql(\"M. Rizki Algipari\");",
+                  "});",
+                  "if (pm.response.code === 201) {",
+                  "  pm.environment.set(\"paintingId\", pm.response.json().data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judul\": \"Lukisan Uji Otomasi\",\n  \"pelukis\": \"M. Rizki Algipari\",\n  \"aliran\": \"realisme\",\n  \"tahunDibuat\": 2026,\n  \"harga\": 4500000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/paintings",
+              "host": ["{{base_url}}"],
+              "path": ["paintings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Perbarui lukisan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Status respons bernilai success\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.status).to.eql(\"success\");",
+                  "});",
+                  "pm.test(\"Lukisan yang diperbarui adalah paintingId yang disimpan\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.data.id).to.eql(Number(pm.environment.get(\"paintingId\")));",
+                  "});",
+                  "pm.test(\"Judul dan harga lukisan berhasil diperbarui\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.data.judul).to.eql(\"Lukisan Uji Otomasi (Diperbarui)\");",
+                  "  pm.expect(b.data.harga).to.eql(5000000);",
+                  "});",
+                  "pm.test(\"Pesan menyebut id lukisan yang diperbarui\", () => {",
+                  "  const b = pm.response.json();",
+                  "  const id = pm.environment.get(\"paintingId\");",
+                  "  pm.expect(b.message).to.eql(`Data lukisan dengan id ${id} berhasil diperbarui`);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judul\": \"Lukisan Uji Otomasi (Diperbarui)\",\n  \"pelukis\": \"M. Rizki Algipari\",\n  \"aliran\": \"impresionisme\",\n  \"tahunDibuat\": 2026,\n  \"harga\": 5000000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/paintings/{{paintingId}}",
+              "host": ["{{base_url}}"],
+              "path": ["paintings", "{{paintingId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Hapus lukisan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 No Content\", () => pm.response.to.have.status(204));",
+                  "pm.test(\"Respons kosong\", () => pm.expect(pm.response.text()).to.eql(\"\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/paintings/{{paintingId}}",
+              "host": ["{{base_url}}"],
+              "path": ["paintings", "{{paintingId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Skenario Gagal",
+      "item": [
+        {
+          "name": "POST tanpa API key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401 Unauthorized\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"Pesan API key tidak valid atau tidak ditemukan\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.status).to.eql(\"error\");",
+                  "  pm.expect(b.message).to.eql(\"API key tidak valid atau tidak ditemukan\");",
+                  "  pm.expect(b.data).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judul\": \"Tanpa API Key\",\n  \"pelukis\": \"M. Rizki Algipari\",\n  \"aliran\": \"realisme\",\n  \"tahunDibuat\": 2026,\n  \"harga\": 1000000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/paintings",
+              "host": ["{{base_url}}"],
+              "path": ["paintings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST tanpa field judul",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400 Bad Request\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Pesan field judul wajib diisi\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.status).to.eql(\"error\");",
+                  "  pm.expect(b.message).to.eql(\"Field judul wajib diisi\");",
+                  "  pm.expect(b.data).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pelukis\": \"M. Rizki Algipari\",\n  \"aliran\": \"realisme\",\n  \"tahunDibuat\": 2026,\n  \"harga\": 1000000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/paintings",
+              "host": ["{{base_url}}"],
+              "path": ["paintings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST dengan JSON rusak",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400 Bad Request\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Pesan format JSON tidak valid\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.status).to.eql(\"error\");",
+                  "  pm.expect(b.message).to.eql(\"Format JSON tidak valid\");",
+                  "  pm.expect(b.data).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"judul\":\"x\",\"pelukis\":\"y\",,}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/paintings",
+              "host": ["{{base_url}}"],
+              "path": ["paintings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET ID tidak ditemukan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404 Not Found\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Pesan data id 999999 tidak ditemukan\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.status).to.eql(\"error\");",
+                  "  pm.expect(b.message).to.eql(\"Data dengan id 999999 tidak ditemukan\");",
+                  "  pm.expect(b.data).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/paintings/999999",
+              "host": ["{{base_url}}"],
+              "path": ["paintings", "999999"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT ID tidak ditemukan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404 Not Found\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Pesan data id 999999 tidak ditemukan\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.status).to.eql(\"error\");",
+                  "  pm.expect(b.message).to.eql(\"Data dengan id 999999 tidak ditemukan\");",
+                  "  pm.expect(b.data).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judul\": \"Tidak Ada\",\n  \"pelukis\": \"M. Rizki Algipari\",\n  \"aliran\": \"realisme\",\n  \"tahunDibuat\": 2026,\n  \"harga\": 1000000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/paintings/999999",
+              "host": ["{{base_url}}"],
+              "path": ["paintings", "999999"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE ID tidak ditemukan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404 Not Found\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Pesan data id 999999 tidak ditemukan\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.status).to.eql(\"error\");",
+                  "  pm.expect(b.message).to.eql(\"Data dengan id 999999 tidak ditemukan\");",
+                  "  pm.expect(b.data).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/paintings/999999",
+              "host": ["{{base_url}}"],
+              "path": ["paintings", "999999"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Endpoint tidak terdaftar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404 Not Found\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Pesan endpoint tidak ditemukan\", () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.status).to.eql(\"error\");",
+                  "  pm.expect(b.message).to.eql(\"Endpoint tidak ditemukan\");",
+                  "  pm.expect(b.data).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tidak-ada",
+              "host": ["{{base_url}}"],
+              "path": ["tidak-ada"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

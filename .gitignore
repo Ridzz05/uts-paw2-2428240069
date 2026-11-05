@@ -1,0 +1,7 @@
+node_modules/
+.env
+.omp/
+.kilo/
+UTS-PAW2-SI5C-2428240113.pdf
+
+.retarget-applied
