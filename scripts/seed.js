@@ -1,114 +1,26 @@
-// Seed data awal: 3 film (collection film) dan 6 Bioskop (collection Bioskop).
-// Setiap Bioskop meng-embed detail drama serta daftar komedi, dan mereferensikan
-// dokumen film lewat ObjectId.
+// Seed data awal: 3 Studio (collection studio) dan 6 Film (collection film).
+// Setiap Film meng-embed produksi dan mereferensikan Studio lewat studioId.
 require("dotenv").config();
 
 const mongoose = require("mongoose");
 const { connectDB } = require("../config/db");
 const { Film } = require("../models/filmModel");
-const { Bioskop } = require("../models/BioskopModel");
+const { Studio } = require("../models/studioModel");
 
-const dataFilm = [
-  {
-    nama: "Rahmat Hidayat",
-    negara: "Indonesia",
-    tahunLahir: 1985,
-    genre: "sutradara",
-    bio: "Film sutradara asal Palembang yang memusatkan karya pada suasana sungai Musi.",
-  },
-  {
-    nama: "Siti Nurhaliza",
-    negara: "Indonesia",
-    tahunLahir: 1990,
-    genre: "impresionisme",
-    bio: "Film impresionisme yang menangkap nuansa cahaya pagi di sekitar kota.",
-  },
-  {
-    nama: "Bagas Prasetyo",
-    negara: "Indonesia",
-    tahunLahir: 1995,
-    genre: "abstrak",
-    bio: "Film abstrak yang memakai bentuk dan warna tanpa nama sebagai ekspresi.",
-  },
+const dataStudio = [
+  { kode: "ST1", nama: "Studio 1" },
+  { kode: "ST2", nama: "Studio 2" },
+  { kode: "ST3", nama: "Studio 3" },
 ];
 
-// Data Bioskop memakai nama film; ObjectId-nya diisi saat seeding.
-const dataBioskop = [
-  {
-    kodeFilm: "FLM-2428240069-01",
-    judul: "Senja di Musi",
-    film: "Rahmat Hidayat",
-    genre: "sutradara",
-    createdAt: 2023,
-    durasiMenit: 7500000,
-    drama: { tinggi: 80, lebar: 60, media: "Kanvas" },
-    komedi: [
-      { nama: "Andi Saputra", rating: 5, komentar: "Warna senja tersaji sangat hidup.", tanggal: new Date("2023-11-02") },
-      { nama: "Dewi Lestari", rating: 4, komentar: "Komposisi tenang dan mudah dipahami.", tanggal: new Date("2023-12-10") },
-    ],
-  },
-  {
-    kodeFilm: "FLM-2428240069-02",
-    judul: "Tari Cahaya Pagi",
-    film: "Siti Nurhaliza",
-    genre: "impresionisme",
-    createdAt: 2021,
-    durasiMenit: 5200000,
-    drama: { tinggi: 100, lebar: 80, media: "Kanvas" },
-    komedi: [
-      { nama: "Rina Puspita", rating: 5, komentar: "Sapuan warna cahaya pagi terasa hangat.", tanggal: new Date("2021-05-18") },
-    ],
-  },
-  {
-    kodeFilm: "FLM-2428240069-03",
-    judul: "Bentuk Tanpa Nama",
-    film: "Bagas Prasetyo",
-    genre: "abstrak",
-    createdAt: 2024,
-    durasiMenit: 9800000,
-    drama: { tinggi: 120, lebar: 90, media: "Kanvas" },
-    komedi: [
-      { nama: "Yoga Mahendra", rating: 4, komentar: "Bentuknya berani tapi masih terasa hangat.", tanggal: new Date("2024-02-09") },
-      { nama: "Citra Ayu", rating: 5, komentar: "Warna gelapnya sangat berkesan.", tanggal: new Date("2024-03-21") },
-    ],
-  },
-  {
-    kodeFilm: "FLM-2428240069-04",
-    judul: "Suara Taman Malam",
-    film: "Rahmat Hidayat",
-    genre: "sutradara",
-    createdAt: 2022,
-    durasiMenit: 6300000,
-    drama: { tinggi: 90, lebar: 70, media: "Kanvas" },
-    komedi: [
-      { nama: "Fajar Nugroho", rating: 4, komentar: "Suasana malamnya terasa hidup.", tanggal: new Date("2022-09-30") },
-    ],
-  },
-  {
-    kodeFilm: "FLM-2428240069-05",
-    judul: "Kabut Pagi di Tepi Sungai",
-    film: "Siti Nurhaliza",
-    genre: "impresionisme",
-    createdAt: 2020,
-    durasiMenit: 4100000,
-    drama: { tinggi: 70, lebar: 50, media: "Kanvas" },
-    komedi: [
-      { nama: "Bella Sari", rating: 3, komentar: "Kabutnya masih bisa lebih pekat.", tanggal: new Date("2020-07-14") },
-    ],
-  },
-  {
-    kodeFilm: "FLM-2428240069-06",
-    judul: "Warna yang Tak Bernama",
-    film: "Bagas Prasetyo",
-    genre: "abstrak",
-    createdAt: 2025,
-    durasiMenit: 12500000,
-    drama: { tinggi: 150, lebar: 110, media: "Kanvas" },
-    komedi: [
-      { nama: "Hendra Gunawan", rating: 5, komentar: "Ini karya paling berani dari Bagas.", tanggal: new Date("2025-01-27") },
-      { nama: "Lisa Kurnia", rating: 4, komentar: "Warna berani tapi rapi.", tanggal: new Date("2025-02-08") },
-    ],
-  },
+// Data Film memakai kode Studio; ObjectId-nya diisi saat seeding.
+const dataFilm = [
+  { kodeFilm: "FLM-2428240069-01", judul: "Tawa di Ujung Senja", durasiMenit: 120, genre: "komedi", produksi: { sutradara: "Rahmat Hidayat", tahun: "2021" }, studio: "ST1" },
+  { kodeFilm: "FLM-2428240069-02", judul: "Kantin Kampus", durasiMenit: 95, genre: "komedi", produksi: { sutradara: "Sinta Maharani", tahun: "2023" }, studio: "ST2" },
+  { kodeFilm: "FLM-2428240069-03", judul: "Hujan di Bulan Juni", durasiMenit: 110, genre: "drama", produksi: { sutradara: "Dewi Lestari", tahun: "2019" }, studio: "ST1" },
+  { kodeFilm: "FLM-2428240069-04", judul: "Surat untuk Ibu", durasiMenit: 135, genre: "drama", produksi: { sutradara: "Bayu Prakoso", tahun: "2022" }, studio: "ST3" },
+  { kodeFilm: "FLM-2428240069-05", judul: "Garis Depan", durasiMenit: 140, genre: "aksi", produksi: { sutradara: "Andi Wirawan", tahun: "2020" }, studio: "ST2" },
+  { kodeFilm: "FLM-2428240069-06", judul: "Kejar Bayangan", durasiMenit: 105, genre: "aksi", produksi: { sutradara: "Maya Kusuma", tahun: "2024" }, studio: "ST3" },
 ];
 
 async function seed() {
@@ -117,26 +29,20 @@ async function seed() {
   // Mulai dari kondisi bersih agar jumlah data pada pengujian pasti.
   await mongoose.connection.db.dropCollection("Bioskop").catch(() => {});
   await mongoose.connection.db.dropCollection("film").catch(() => {});
+  await mongoose.connection.db.dropCollection("studio").catch(() => {});
 
-  const filmTersimpan = await Film.insertMany(dataFilm);
-  const idFilm = new Map(filmTersimpan.map((film) => [film.nama, film._id]));
+  const studioTersimpan = await Studio.insertMany(dataStudio);
+  const idStudio = new Map(studioTersimpan.map((studio) => [studio.kode, studio._id]));
 
-  const BioskopSiap = dataBioskop.map((Bioskop) => ({
-    ...Bioskop,
-    film: idFilm.get(Bioskop.film),
-  }));
+  const filmSiap = dataFilm.map(({ studio, ...film }) => ({ ...film, studioId: idStudio.get(studio) }));
+  await Film.insertMany(filmSiap);
 
-  await Bioskop.insertMany(BioskopSiap);
-
-  // Index untuk mendukung filtering, sorting, dan join referensi.
-  await Bioskop.collection.createIndex({ genre: 1 });
-  await Bioskop.collection.createIndex({ durasiMenit: 1 });
-  await Bioskop.collection.createIndex({ film: 1 });
-  await Bioskop.collection.createIndex({ kodeFilm: 1 }, { unique: true });
-  await Film.collection.createIndex({ nama: 1 }, { unique: true });
+  // Pastikan index unik (kodeFilm, kode) ada.
+  await Studio.syncIndexes();
+  await Film.syncIndexes();
 
   console.log(
-    `Seed selesai: ${filmTersimpan.length} film, ${BioskopSiap.length} Bioskop tersimpan di database ${mongoose.connection.name}`
+    `Seed selesai: ${studioTersimpan.length} studio, ${filmSiap.length} film tersimpan di database ${mongoose.connection.name}`
   );
 
   await mongoose.disconnect();

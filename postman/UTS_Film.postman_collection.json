@@ -1,0 +1,589 @@
+{
+  "info": {
+    "_postman_id": "a3f1c2d4-2428-4006-9069-0000000000f1",
+    "name": "UTS PAW II - API Film dan Studio",
+    "description": "Pengujian API Topik 14 Bioskop (Film) + Studio. M. Rizki Algipari / 2428240069. Jalankan `npm run seed` sebelum mengulang.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - POST studio baru",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+              "pm.test(\"Studio tersimpan dan id disimpan\", () => { const b = pm.response.json(); pm.expect(b.data.kode).to.eql(\"ST-2428240069\"); pm.environment.set(\"studioId\", b.data._id); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/studio",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "studio"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kode\": \"ST-2428240069\",\n  \"nama\": \"Studio Uji 2428240069\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 - POST kode studio duplikat",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 409\", () => pm.response.to.have.status(409));",
+              "pm.test(\"Pesan menyebut kode duplikat\", () => { const b = pm.response.json(); pm.expect(b.status).to.eql(\"error\"); pm.expect(b.message).to.include(\"kode\"); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/studio",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "studio"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kode\": \"ST-2428240069\",\n  \"nama\": \"Studio Uji 2428240069\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 - GET semua studio",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"data berupa array tidak kosong\", () => { const d = pm.response.json().data; pm.expect(d).to.be.an(\"array\").that.is.not.empty; });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/studio",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "studio"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 - POST film baru",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+              "pm.test(\"produksi dan studioId ada\", () => { const b = pm.response.json(); pm.expect(b.data.produksi.sutradara).to.eql(\"M. Rizki Algipari\"); pm.expect(b.data.produksi).to.not.have.property(\"_id\"); pm.expect(b.data.studioId).to.eql(pm.environment.get(\"studioId\")); pm.environment.set(\"filmId\", b.data._id); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/film",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kodeFilm\": \"FLM-UJI-2428240069\",\n  \"judul\": \"Film Bukti Uji 2428240069\",\n  \"durasiMenit\": 95,\n  \"genre\": \"komedi\",\n  \"produksi\": {\n    \"sutradara\": \"M. Rizki Algipari\",\n    \"tahun\": \"2026\"\n  },\n  \"studioId\": \"{{studioId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 - POST kodeFilm duplikat",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 409\", () => pm.response.to.have.status(409));",
+              "pm.test(\"Pesan menyebut kodeFilm duplikat\", () => { pm.expect(pm.response.json().message).to.include(\"kodeFilm\"); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/film",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kodeFilm\": \"FLM-UJI-2428240069\",\n  \"judul\": \"Film Bukti Uji 2428240069\",\n  \"durasiMenit\": 95,\n  \"genre\": \"komedi\",\n  \"produksi\": {\n    \"sutradara\": \"M. Rizki Algipari\",\n    \"tahun\": \"2026\"\n  },\n  \"studioId\": \"{{studioId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 - POST tanpa field judul",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Detail menyebut judul\", () => { const b = pm.response.json(); pm.expect(b.status).to.eql(\"error\"); pm.expect(b.message).to.include(\"judul\"); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/film",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kodeFilm\": \"FLM-NOJUDUL-2428240069\",\n  \"durasiMenit\": 95,\n  \"genre\": \"komedi\",\n  \"studioId\": \"{{studioId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07 - POST durasiMenit di bawah minimum",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Detail menyebut durasiMenit\", () => { pm.expect(pm.response.json().message).to.include(\"durasiMenit\"); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/film",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kodeFilm\": \"FLM-MIN-2428240069\",\n  \"judul\": \"Durasi Nol\",\n  \"durasiMenit\": 0,\n  \"genre\": \"komedi\",\n  \"studioId\": \"{{studioId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 - GET semua film",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"data berupa array tidak kosong\", () => { pm.expect(pm.response.json().data).to.be.an(\"array\").that.is.not.empty; });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/film",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09 - GET filter genre",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Semua genre komedi\", () => { const d = pm.response.json().data; pm.expect(d).to.not.be.empty; pm.expect(d.every(x => x.genre === \"komedi\")).to.be.true; });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/film?genre=komedi",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film"
+          ],
+          "query": [
+            {
+              "key": "genre",
+              "value": "komedi"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10 - GET filter genre tanpa hasil",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"data array kosong\", () => pm.expect(pm.response.json().data).to.eql([]));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/film?genre=tidak_ada",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film"
+          ],
+          "query": [
+            {
+              "key": "genre",
+              "value": "tidak_ada"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11 - GET sort durasiMenit menaik",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Terurut menaik\", () => { const d = pm.response.json().data.map(x => x.durasiMenit); pm.expect(d).to.eql([...d].sort((a, b) => a - b)); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/film?sort=durasiMenit",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film"
+          ],
+          "query": [
+            {
+              "key": "sort",
+              "value": "durasiMenit"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11b - GET filter genre dan sort durasiMenit (Gambar 4)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Hanya komedi dan menaik\", () => { const b = pm.response.json(); pm.expect(b.data.every(x => x.genre === \"komedi\")).to.be.true; const d = pm.response.json().data.map(x => x.durasiMenit); pm.expect(d).to.eql([...d].sort((a, b) => a - b)); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/film?genre=komedi&sort=durasiMenit",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film"
+          ],
+          "query": [
+            {
+              "key": "genre",
+              "value": "komedi"
+            },
+            {
+              "key": "sort",
+              "value": "durasiMenit"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "12 - GET film by id (studioId populate)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"studioId ter-populate dengan kode dan nama\", () => { const s = pm.response.json().data.studioId; pm.expect(s.kode).to.be.a(\"string\"); pm.expect(s.nama).to.be.a(\"string\"); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/film/{{filmId}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film",
+            "{{filmId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "13 - GET id tidak ditemukan",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+              "pm.test(\"status error\", () => pm.expect(pm.response.json().status).to.eql(\"error\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/film/000000000000000000000000",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film",
+            "000000000000000000000000"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "14 - GET id format salah",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Pesan format id\", () => pm.expect(pm.response.json().message).to.eql(\"Format id tidak valid\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/film/abc",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "film",
+            "abc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "15 - GET endpoint tidak terdaftar",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+              "pm.test(\"Pesan endpoint\", () => pm.expect(pm.response.json().message).to.eql(\"Endpoint tidak ditemukan\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/rute-tidak-ada",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "rute-tidak-ada"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

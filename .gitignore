@@ -4,4 +4,14 @@ node_modules/
 .kilo/
 UTS-PAW2-SI5C-2428240113.pdf
 
+# Folder sinkron lokal Postman Desktop (duplikat koleksi di postman/UTS_Film.*)
+.postman/
+postman/collections/
+postman/environments/
+postman/globals/
+postman/documents/
+postman/flows/
+postman/mocks/
+postman/specs/
+
 .retarget-applied

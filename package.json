@@ -1,7 +1,7 @@
 {
-  "name": "tugas1-restful-2428240069",
+  "name": "uts-paw2-2428240069",
   "version": "1.0.0",
-  "description": "RESTful API Galeri Seni - Bioskop (tahun)",
+  "description": "RESTful API Film dan Studio (UTS PAW II) - M. Rizki Algipari 2428240069",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

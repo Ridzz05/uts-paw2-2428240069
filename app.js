@@ -3,8 +3,8 @@
 // Nama    : M. Rizki Algipari
 // NIM     : 2428240069
 // Kelas   : SI5B
-// tahun: Galeri Seni - Bioskop
-// Resource: /Bioskop (referensi ke collection film, embed drama & komedi)
+// Topik 14: Bioskop (Film)
+// Resource: /film (embed produksi, referensi studioId ke /studio)
 // ===========================================================================
 
 // Muat variabel lingkungan dari .env (harus paling awal).
@@ -15,8 +15,8 @@ const cors = require("cors");
 
 const { connectDB } = require("./config/db");
 const { logger } = require("./middlewares/logger");
-const BioskopRoutes = require("./routes/BioskopRoutes");
 const filmRoutes = require("./routes/filmRoutes");
+const studioRoutes = require("./routes/studioRoutes");
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
 
 // Membuat instance aplikasi Express.
@@ -33,26 +33,24 @@ app.get("/", (req, res) => {
     nama: "M. Rizki Algipari",
     nim: "2428240069",
     kelas: "SI5B",
-    topik: "tahun - Galeri Seni: Bioskop",
+    topik: "Topik 14 - Bioskop (Film)",
     database: "MongoDB",
-    resource: "/Bioskop",
+    resource: "/film",
+    pendukung: "/studio",
     endpoints: [
       "GET /",
-      "GET /Bioskop (filter, sort, page/limit, fields)",
-      "GET /Bioskop/:id",
-      "POST /Bioskop (x-api-key)",
-      "PUT /Bioskop/:id (x-api-key)",
-      "DELETE /Bioskop/:id (x-api-key)",
-      "GET /film",
+      "GET /studio",
+      "POST /studio",
+      "GET /film (filter genre, sort, page/limit, fields)",
       "GET /film/:id",
-      "POST /film (x-api-key)",
+      "POST /film",
     ],
   });
 });
 
-// Route resource /Bioskop dan /film.
-app.use("/Bioskop", BioskopRoutes);
+// Route resource /film dan /studio.
 app.use("/film", filmRoutes);
+app.use("/studio", studioRoutes);
 
 // Catch-all 404 untuk endpoint tak dikenal.
 app.use(notFound);
